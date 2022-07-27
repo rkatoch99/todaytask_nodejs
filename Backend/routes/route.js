@@ -8,5 +8,8 @@ const AuthController=require('../Controller/AuthRegistration')
 routes.post('/Registration',AuthController.AuthRegistration)
 
 
+routes.post('/Login',AuthController.AuthLogin)
+
+
 
 module.exports=routes

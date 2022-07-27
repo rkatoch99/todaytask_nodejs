@@ -47,3 +47,42 @@ exports.AuthRegistration= async (req,res )=>{
         console.log(errr)
     }
 }
+
+
+
+
+exports.AuthLogin= async(req,res, next)=>{
+  const {username , password} = req.body  
+  if(!username|| !password){
+    return next("password and username both are required...")
+  }
+      
+  try{
+
+    
+    const user = await Registration.findOne({username:req.body.username})
+ 
+    if(!user)
+      return res.status(400).json({error:"Username is not match...."})
+      
+
+    
+      const comparePassword = await bcrypt.compare(req.body.password,user.password);
+      console.log(comparePassword)
+      if(!comparePassword){
+
+        return res.status(400).json({error:"password did't match..."})
+        
+      }
+    
+      return res.status(200).json({message:"Login sucessfully"});
+
+
+  }catch(err){
+    console.log(err)
+    alert(err.message)
+    return next("error : ", err)
+  }
+
+
+}
