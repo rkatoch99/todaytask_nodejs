@@ -1,5 +1,7 @@
 require('./MongoDb/db')
 require('./MongoDb/models/Register')
+require("dotenv")
+  .config();
 
 const express =require('express')
 const app =express()
@@ -18,7 +20,12 @@ const PORT = process.env.PORT || 8000
 
 app.use(cors())
 app.use(json())
-app.use(Router)
+
+app.use(express.urlencoded({
+    extended: true
+  }));
+
+app.use(Router,verifyToken = require('./Midleware/AuthJWT'))
 
 
 
