@@ -3,6 +3,7 @@ const express = require('express')
 const routes = express.Router()
 
 const AuthController=require('../Controller/AuthRegistration')
+const verifyToken = require('../Midleware/AuthJWT')
 
 const Data = require('../Controller/Fetchdata')
 
@@ -14,7 +15,9 @@ routes.post('/Login',AuthController.AuthLogin)
 
 
 
-routes.get('/Dashboard',Data.FetchData)
+routes.get('/Dashboard',verifyToken,Data.FetchData)
+
+routes.put('/user/delete',verifyToken,Data.DeleteData)
 
 
 

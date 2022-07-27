@@ -25,7 +25,7 @@ app.use(express.urlencoded({
     extended: true
   }));
 
-app.use(Router,verifyToken = require('./Midleware/AuthJWT'))
+app.use(Router)
 
 
 

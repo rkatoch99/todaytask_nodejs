@@ -35,3 +35,23 @@ exports.FetchData= async (req,res)=>{
     }
 
 }
+
+
+
+exports.DeleteData=async (req,res)=>{
+    try{
+        const{_id}=req.body
+
+        const User = await Registration.deleteOne({id:_id})
+        console.log(User)
+
+        res.status(200).json({message:"data delete sucessfully.."})
+            
+
+        
+        
+
+    }catch(err){
+        console.log(err)
+    }
+}
