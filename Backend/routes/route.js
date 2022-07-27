@@ -21,4 +21,8 @@ routes.put('/user/delete',verifyToken,Data.DeleteData)
 
 
 
+routes.get('/user/list/:page',Data.PageNo)
+
+
+
 module.exports=routes
