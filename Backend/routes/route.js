@@ -27,9 +27,9 @@ routes.get('/user/list/:page',Data.PageNo)
 routes.post('/Registration',AuthController.AuthRegistration)
 routes.post('/Login',AuthController.AuthLogin)
 
-routes.post('/user/address',AuthController.AuthUserDetails)
+routes.post('/user/address',verifyToken,AuthController.AuthUserDetails)
 
-routes.post('/user/Addaddress',AuthController.Addressupdate)
+routes.post('/user/Addaddress',verifyToken,AuthController.Addressupdate)
 
 // routes.post('/user/tempname',AuthController.tempUser)
 // routes.post('/user/tempnickname',AuthController.nickNames)
