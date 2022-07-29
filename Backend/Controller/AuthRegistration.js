@@ -1,4 +1,4 @@
-const Registration = require("../MongoDb/models/Register");
+const { Registration } = require("../MongoDb/models/Register");
 const { UserDetals } = require("../MongoDb/models/Register");
 const { address, nick, users } = require("../MongoDb/models/Register");
 var jwt = require("jsonwebtoken");
@@ -16,6 +16,15 @@ exports.AuthRegistration = async (req, res) => {
     if (userEmail) {
       res.status(400).json({ message: "Email is already present.." });
     }
+
+    // return Registration.updateOne({resetLink:tokken},function(err,sucess){
+    //   if(err){
+    //     return res.status(400).json({error:"rest assword lik error"})
+    //   }else{
+    //     res.status(200).json({message:data})
+    //   }
+    // })
+
     const password = req.body.password;
     const Confirmpassword = req.body.Confirmpassword;
 
@@ -28,6 +37,7 @@ exports.AuthRegistration = async (req, res) => {
         username: req.body.username,
         password: passwordHash,
       });
+      console.log(Register);
 
       const save = await Register.save();
       if (save) {
@@ -158,8 +168,8 @@ exports.Addressupdate = async (req, res) => {
     console.log("id", user);
 
     user.Address.push(save);
-    const d= await user.save()
-    console.log(d)
+    const d = await user.save();
+    console.log(d);
 
     // console.log("data wala data ",Data)
     // res.json({ Address: save, id: save.user_id });
@@ -180,16 +190,72 @@ exports.Addressupdate = async (req, res) => {
   }
 };
 
-
-
-exports.Delete= async (req,res,next)=>{
-  const {user_id}=req.body
-  try{
-    const del = await UserDetals.findOneAndDelete({user:user_id})
-    res.status(200).json({message:`dlete sucessfully ${del}`})
-    console.log(del)
-
-  }catch(err){
-    console.log(err)
+exports.Delete = async (req, res, next) => {
+  const { user_id } = req.body;
+  try {
+    const del = await UserDetals.findOneAndDelete({ user: user_id });
+    res.status(200).json({ message: `dlete sucessfully ${del}` });
+    console.log(del);
+  } catch (err) {
+    console.log(err);
   }
-}
+};
+
+exports.Token = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+
+    const Checkemail = await Registration.findOne({ email: email });
+    console.log(Checkemail);
+
+    if (!Checkemail) {
+      return res
+        .status(400)
+        .json({ error: "User of the email Doesn't exists..." });
+    }
+
+    const tokken = jwt.sign(
+      {
+        email: email,
+      },
+      process.env.Resetpassword,
+      {
+        expiresIn: "10m",
+      }
+    );
+
+    const reg = await Checkemail.updateOne({ resetLink: tokken });
+    if (!reg) {
+      res.status(400).json({ error: " reset password link error" });
+    } else {
+      res
+        .status(200)
+        .json({ message: `password rest successfully ${Checkemail}` });
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+//----------------------------------End Password reset generation Token----------------------//
+
+exports.Verify = async (req, res) => {
+  try {
+    const token = req.params.password_reset_token;
+
+    console.log(req.params.password_reset_token);
+    if (token) {
+      await jwt.verify(token, process.env.Resetpassword, (err, success) => {
+        if (err) {
+          return res.status(400).json({ error: "Tokken was not verify..." });
+        } else {
+          return res
+            .status(200)
+            .json({ message: "Tokken verify.....", success });
+        }
+      });
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};

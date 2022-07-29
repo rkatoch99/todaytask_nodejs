@@ -21,6 +21,10 @@ const UserRegister = new mongoose.Schema({
     type: String,
     required: true,
   },
+  resetLink:{
+    data:String,
+    default:'',
+  }
 });
 
 const userDetails = new mongoose.Schema({
@@ -73,24 +77,6 @@ const Address = new mongoose.Schema({
     type: String,
   },
 });
-
-const nickname = mongoose.Schema({
-  nickname:String,
-  name:String,
-});
-
-const u = mongoose.Schema({
-  name: String,
-  nicknames: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "nick",
-    },
-  ],
-});
-
-exports.users = new mongoose.model("temp", u); 
-exports.nick = new mongoose.model("nick", nickname); 
 
 
 const Registration = new mongoose.model("users", UserRegister);

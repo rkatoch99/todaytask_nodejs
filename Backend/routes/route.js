@@ -5,6 +5,7 @@ const routes = express.Router()
 const AuthController=require('../Controller/AuthRegistration')
 const verifyToken = require('../Midleware/AuthJWT')
 
+
 const Data = require('../Controller/Fetchdata')
 
 
@@ -57,6 +58,9 @@ routes.put('/user/delete',verifyToken,Data.DeleteData)
 routes.delete('/user/address/:id',AuthController.Delete)
 
 
+routes.post('/user/forgot-password',AuthController.Token)
+
+routes.post('/user/verify-reset-password/:password_reset_token',AuthController.Verify)
 
 
 
